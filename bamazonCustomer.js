@@ -8,7 +8,7 @@ const connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
     user: 'root',
-    password: 'inGmte012',
+    password: '',
     database: 'bamazon_DB'
 });
 
@@ -19,7 +19,6 @@ connection.connect(function (err) {
         return;
     }
     console.log('connected as id ' + connection.threadId);
-
 });
 
 // list all the products
