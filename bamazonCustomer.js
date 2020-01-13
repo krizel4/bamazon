@@ -12,60 +12,87 @@ const connection = mysql.createConnection({
     database: 'bamazon_DB'
 });
 
-// connect to the mysql server and sql database
-connection.query('SELECT * FROM Products', function (err, res) {
+// connect to the mysql server and sql database, throw error if it doesn't work
+connection.connect(function (err) {
     if (err) throw err;
-
-    // list all the products
-    console.log('Welcome to Bamazon');
-    console.log('================================================================');
-    for (let i = 0; i > res.length; i++) {
-        let inventory = `\n
-        ID No.: ${res[i].itemID} | Product: ${res[i].product} | Department: ${res[i].department} | Price: ${res[i].price} | Available: ${res[i].stockQuantity}
-        ================================================================`
-        console.log(inventory);
-    }
-    // if (err) {
-    //     console.error('error connecting: ' + err.stack);
-    //     return;
-    // }
-    // console.log('connected as id ' + connection.threadId);
+    displayInventory();
 });
 
+// list all the products
+const productList = 'SELECT *FROM Products';
+function displayInventory () {
+    connection.query(productList, function (err, res) {
+        if (err) throw err;
+
+        console.log('Welcome to Bamazon');
+        console.log('================================================================');
+        for (let i = 0; i > res.length; i++) {
+            let inventory = `\n
+        ID No.: ${res[i].itemID} | Product: ${res[i].product} | Department: ${res[i].department} | Price: ${res[i].price} | Available: ${res[i].stockQuantity}
+        ================================================================`
+            console.log(inventory);
+        }
+        customerPurchase();
+        // if (err) {
+        //     console.error('error connecting: ' + err.stack);
+        //     return;
+        // }
+        // console.log('connected as id ' + connection.threadId);
+
+    });
+}
 // prompt user what they'd like to purchase using the id number
-// inquirer.prompt([
-//     {
-//         type: "input",
-//         name: "ID",
-//         message: "What would you like to purchase? (Type in the ID No.)",
-//         // must be a number
-//         validate: function(value){
-//             if(isNaN(value) == false && parseInt(value) <= res.length && parseInt(value) > 0 ) {
-//                 return true;
-//             } else {
-//                 return false;
-//             }
-//         }
-//     },
-//     {
-//         type: "input",
-//         name: "Quantity",
-//         message: "How many would you like?",
-//         // must be a number
-//         validate: function(value){
-//             if(isNaN(value) == false && parseInt(value) <= res.length && parseInt(value) > 0) {
-//                 return true;
-//             } else {
-//                 return false;
-//             }
-//         }
-//     }
-// ])
+function customerPurchase() {
+    inquirer.prompt([{
+            type: "input",
+            name: "ID",
+            message: "What would you like to purchase? (Type in the ID No.)",
+            // must be a number
+            validate: function (value) {
+                if (isNaN(value) == false && parseInt(value) <= res.length && parseInt(value) > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        },
+        {
+            type: "input",
+            name: "Quantity",
+            message: "How many would you like?",
+            // must be a number
+            validate: function (value) {
+                if (isNaN(value) == false && parseInt(value) <= res.length && parseInt(value) > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
 
+        // calculate the cost of everything
+    ]).then(function (ans) {
+        let query = 'SELECT stock_quantity, price, product, department FROM products WHERE ?';
+        connection.query(query, {
+            item_id: ans.itemID
+        }, function (err, res) {
+            if (err) throw err;
+            const availability = res[0].stockQuantity;
+            const unitPrice = res[0].price;
+            const productDepartment = res[0].department;
 
-// quantity of purchase (must be a number)
+            // insufficient quantity and prevent order from going through
+            if (availability >= ans.stockQuantity) {
+                completePurchase(availability, unitPrice, productSales, productDepartment, ans.itemID, ans.stockQuantity);
+            } else {
+                console.log(`There isn't enough in our inventory! There are only ${stockQuantity} left.`);
+                customerPurchase();
+            }
 
-// insufficient quantity and prevent order from going through
+        })
+    });
+}
+
 
 // is there anything else? y/n
 
