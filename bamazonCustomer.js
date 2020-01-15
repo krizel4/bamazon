@@ -20,7 +20,7 @@ connection.connect(function (err) {
 
 // list all the products
 const productList = 'SELECT *FROM Products';
-const displayInventory = function () {
+function displayInventory () {
     connection.query(productList, function (err, res) {
         if (err) throw err;
 
@@ -42,7 +42,7 @@ const displayInventory = function () {
     });
 }
 // prompt user what they'd like to purchase using the id number
-const customerPurchase = function () {
+function customerPurchase() {
     inquirer.prompt([{
             type: "input",
             name: "ID",
