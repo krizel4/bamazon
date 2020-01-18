@@ -15,57 +15,34 @@ const connection = mysql.createConnection({
 
 // connect to the mysql server and sql database, throw error if it doesn't work
 connection.connect(function (err) {
-<<<<<<< HEAD
     if (err) {
         console.log("err connecting: " + err.stack)
     }
-=======
-    if (err) throw err;
->>>>>>> 5ae45522810ee626963346d3daa2ae004231754c
     displayInventory();
 });
 
 // list all the products
-<<<<<<< HEAD
 const productList = 'SELECT * FROM Products';
 
 function displayInventory() {
     connection.query(productList, function (err, res) {
         if (err) throw err;
         console.table(res)
-=======
-const productList = 'SELECT *FROM Products';
-function displayInventory () {
-    connection.query(productList, function (err, res) {
-        if (err) throw err;
->>>>>>> 5ae45522810ee626963346d3daa2ae004231754c
 
         console.log('Welcome to Bamazon');
         console.log('================================================================');
         for (let i = 0; i > res.length; i++) {
-<<<<<<< HEAD
             let inventory = `\nproductList
-=======
-            let inventory = `\n
->>>>>>> 5ae45522810ee626963346d3daa2ae004231754c
         ID No.: ${res[i].itemID} | Product: ${res[i].product} | Department: ${res[i].department} | Price: ${res[i].price} | Available: ${res[i].stockQuantity}
         ================================================================`
             console.log(inventory);
         }
         customerPurchase();
-<<<<<<< HEAD
         if (err) {
             console.error('error connecting: ' + err.stack);
             return;
         }
         console.log('connected as id ' + connection.threadId);
-=======
-        // if (err) {
-        //     console.error('error connecting: ' + err.stack);
-        //     return;
-        // }
-        // console.log('connected as id ' + connection.threadId);
->>>>>>> 5ae45522810ee626963346d3daa2ae004231754c
 
     });
 }
@@ -100,7 +77,6 @@ function customerPurchase() {
 
         // calculate the cost of everything
     ]).then(function (ans) {
-<<<<<<< HEAD
         let query = 'SELECT stockQuantity, price, product, department FROM products WHERE itemID = ans.ID';
         console.log(query)
         connection.query(query, function (err, res) {
@@ -117,24 +93,6 @@ function customerPurchase() {
                         console.log(`There isn't enough in our inventory! There are only ${stockQuantity} left.`);
                         customerPurchase();
                     }
-=======
-        let query = 'SELECT stock_quantity, price, product, department FROM products WHERE ?';
-        connection.query(query, {
-            item_id: ans.itemID
-        }, function (err, res) {
-            if (err) throw err;
-            const availability = res[0].stockQuantity;
-            const unitPrice = res[0].price;
-            const productDepartment = res[0].department;
-
-            // insufficient quantity and prevent order from going through
-            if (availability >= ans.stockQuantity) {
-                completePurchase(availability, unitPrice, productSales, productDepartment, ans.itemID, ans.stockQuantity);
-            } else {
-                console.log(`There isn't enough in our inventory! There are only ${stockQuantity} left.`);
-                customerPurchase();
-            }
->>>>>>> 5ae45522810ee626963346d3daa2ae004231754c
 
         })
     });
