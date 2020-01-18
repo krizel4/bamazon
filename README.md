@@ -4,7 +4,7 @@ This is a back-end eCommerce page that uses npm's inquirer to deliver prompts th
 
 # How to Run the App
 
-Bamazon primarily uses these two node modules: [`inquirer`](https://www.npmjs.com/package/inquirer), [`mysql`](https://www.npmjs.com/package/mysql).
+Bamazon primarily uses these two node modules: [`inquirer`](https://www.npmjs.com/package/inquirer), [`mysql`](https://www.npmjs.com/package/mysql), [`console.table`](https://www.npmjs.com/package/console.table).
 
 To run the module in the terminal, type in `node bamazonCustomer.js`.
 
@@ -16,3 +16,4 @@ This project is still pending.
 * MySQL
 * JavaScript
 * Node
+* console.table
